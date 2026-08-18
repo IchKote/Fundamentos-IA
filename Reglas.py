@@ -3,7 +3,7 @@ class Reglas:
         self.reglas = []
 
     def espacioVacio(tablero, fila, columna):
-        if tablero.grilla[fila][columna] == "-":
+        if tablero.grilla[fila][columna] in ["-", "X"]:
             return True
         else:
             return False
@@ -21,7 +21,7 @@ class Reglas:
     @staticmethod
     def obtenerFichasA_Voltear(tablero, fila, columna, color):
         fichas_totales = []
-        if tablero.grilla[fila][columna] not in ["-", color]:
+        if tablero.grilla[fila][columna] not in ["-", "X", color]:
             return fichas_totales # Retorna lista vacía si no es espacio vacío
             
         rival = "N" if color == "B" else "B"
@@ -52,3 +52,13 @@ class Reglas:
         fichas_a_voltear = Reglas.obtenerFichasA_Voltear(tablero, fila, columna, color)
         for f, c in fichas_a_voltear: 
             tablero.grilla[f][c] = color
+
+    @staticmethod
+    def obtenerMovimientosValidos(tablero, color):
+        movimientos = []
+        for f in range(tablero.dimension):
+            for c in range(tablero.dimension):
+                if tablero.grilla[f][c] in ["-", "x"]:
+                    if Reglas.jugadaValida(tablero, f, c, color):
+                        movimientos.append((f, c))
+        return movimientos

@@ -1,4 +1,5 @@
 import Jugador
+from Reglas import Reglas
 
 class Tablero:
     def __init__(self, valor):
@@ -26,36 +27,53 @@ class Tablero:
     def crearJugador(self, color):
         return Jugador.Jugadores(color)
 
+    def limpiarX(self):
+        for i in range(self.dimension):
+            for j in range(self.dimension):
+                if self.grilla[i][j] == "X":
+                    self.grilla[i][j] = "-"
+
     def iniciarPartida(self, jugador1, jugador2):
         turno = 0
         switch = True
         while switch:
             valido = True
+            
+            # 1. Nos aseguramos de borrar cualquier "x" del turno anterior
+            self.limpiarX()
+            
             if turno % 2 == 0:
-                while valido:
-                    print(f"Turno del jugador blanco.")
-                    fila = int(input("Ingrese la fila: "))
-                    columna = int(input("Ingrese la columna: "))
-                    if jugador1.ponerFicha(self, fila, columna) == False:
-                        valido = True
-                    else:
-                        valido = False
+                jugador_actual = jugador1
+                nombre_turno = "blanco"
             else:
-                while valido:
-                    print(f"Turno del jugador negro.")
-                    fila = int(input("Ingrese la fila: "))
-                    columna = int(input("Ingrese la columna: "))
-                    if jugador2.ponerFicha(self, fila, columna) == False:
-                        valido = True
-                    else:
-                        valido = False
+                jugador_actual = jugador2
+                nombre_turno = "negro"
+                
+            # 2. Obtenemos movimientos y ESCRIBIMOS la 'x' directo en la grilla
+            movimientos_validos = Reglas.obtenerMovimientosValidos(self, jugador_actual.color)
+            for f, c in movimientos_validos:
+                self.grilla[f][c] = "X"
+                
             self.mostrar()
+            
+            while valido:
+                print(f"\nTurno del jugador {nombre_turno}.")
+                fila = int(input("Ingrese la fila: "))
+                columna = int(input("Ingrese la columna: "))
+                
+                if jugador_actual.ponerFicha(self, fila, columna) == False:
+                    self.mostrar()
+                    valido = True
+                else:
+                    valido = False
+                    
+            # 3. Después de que el jugador puso su ficha, borramos las "x" que no usó
+            self.limpiarX()
             turno += 1
 
 
 tablero = Tablero(valor="-")
 tablero.iniciarTablero()
-tablero.mostrar()
 
 jugador1 = tablero.crearJugador("B")
 jugador2 = tablero.crearJugador("N")

@@ -33,22 +33,25 @@ class Tablero:
             valido = True
             if turno % 2 == 0:
                 while valido:
-                    print(f"Turno del jugador blanco.")
-                    fila = int(input("Ingrese la fila: "))
-                    columna = int(input("Ingrese la columna: "))
-                    if jugador1.ponerFicha(self, fila, columna) == False:
-                        valido = True
-                    else:
-                        valido = False
+                    try:
+                        fila = int(input("Ingrese la fila: "))
+                        columna = int(input("Ingrese la columna: "))
+                        if jugador1.ponerFicha(self, fila, columna) == False:
+                            valido = True
+                        else:
+                            valido = False
+                    except ValueError:
+                        print("Error: Solo se admiten numeros")
             else:
-                while valido:
-                    print(f"Turno del jugador negro.")
+                try:
                     fila = int(input("Ingrese la fila: "))
                     columna = int(input("Ingrese la columna: "))
                     if jugador2.ponerFicha(self, fila, columna) == False:
                         valido = True
                     else:
                         valido = False
+                except ValueError:
+                    print("Error: Solo se admiten numeros.")
             self.mostrar()
             turno += 1
 

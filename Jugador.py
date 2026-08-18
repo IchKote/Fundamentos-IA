@@ -1,6 +1,5 @@
 from Reglas import Reglas 
 
-#Pablo
 class Jugadores:
     def __init__(self, color):
         self.color = color

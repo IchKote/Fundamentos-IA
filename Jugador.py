@@ -17,6 +17,7 @@ class Jugadores:
                     return True
             elif Reglas.espacioOcupado(tablero, fila-1, columna-1) == True:
                 print("La celda ya está ocupada.")
+                return False
         else:
             print("Coordenadas fuera de rango.")
             return False

@@ -58,15 +58,17 @@ class Tablero:
             
             while valido:
                 print(f"\nTurno del jugador {nombre_turno}.")
-                fila = int(input("Ingrese la fila: "))
-                columna = int(input("Ingrese la columna: "))
-                
-                if jugador_actual.ponerFicha(self, fila, columna) == False:
-                    self.mostrar()
-                    valido = True
-                else:
-                    valido = False
+                try:
+                    fila = int(input("Ingrese la fila: "))
+                    columna = int(input("Ingrese la columna: "))
                     
+                    if jugador_actual.ponerFicha(self, fila, columna) == False:
+                        self.mostrar()
+                        valido = True
+                    else:
+                        valido = False
+                except ValueError:
+                    print("Error: Ingrese números válidos.")
             # 3. Después de que el jugador puso su ficha, borramos las "x" que no usó
             self.limpiarX()
             turno += 1

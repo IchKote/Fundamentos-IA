@@ -1,5 +1,6 @@
 import Jugador
 from Reglas import Reglas
+from Agente import Agente 
 
 
 class Tablero:
@@ -89,22 +90,33 @@ class Tablero:
 
             while valido:
                 print(f"\nTurno del jugador {nombre_turno}.")
-                entrada_fila = input("Ingrese la fila: ")
-                entrada_columna = input("Ingrese la columna: ")
 
-                if (not entrada_fila.isdigit() or
-                        not entrada_columna.isdigit()):
-                    print("Por favor, ingrese números válidos.")
-                    continue
-
-                fila = int(entrada_fila)
-                columna = int(entrada_columna)
-
-                if not jug_actual.poner_ficha(self, fila, columna):
-                    self.mostrar()
-                    valido = True
-                else:
+                if isinstance(jug_actual, Agente):
+                    print("La CPU esta calculando su jugada...")
+                    movimiento = jug_actual.seleccionar_mejor_movimiento(self)
+                    if movimiento:
+                        f, c = movimiento
+                        jug_actual.poner_ficha(self, f + 1, c + 1)
                     valido = False
+
+                else:
+
+                    entrada_fila = input("Ingrese la fila: ")
+                    entrada_columna = input("Ingrese la columna: ")
+
+                    if (not entrada_fila.isdigit() or
+                            not entrada_columna.isdigit()):
+                        print("Por favor, ingrese números válidos.")
+                        continue
+
+                    fila = int(entrada_fila)
+                    columna = int(entrada_columna)
+
+                    if not jug_actual.poner_ficha(self, fila, columna):
+                        self.mostrar()
+                        valido = True
+                    else:
+                        valido = False
 
             self.limpiar_x()
             turno += 1
@@ -135,12 +147,34 @@ class Tablero:
         else:
             print("¡Es un empate!")
 
+def menu():
+    """Menu principal"""
+    print("================================")
+    print("          MENU OTHELLO          ")
+    print("================================")
+    print("1. Jugador vs Jugador")
+    print("2. Jugador vs CPU")
+    print("================================")
 
+    while True:
+        opcion = input("Seleccione una opcion:")
+        if opcion in ["1","2"]:
+            return opcion
+        print ("Porfavor seleccione una opción válida(1-2)")  
+    
+
+    
 if __name__ == "__main__":
+    opcion = menu()
+    
     tablero_juego = Tablero()
     tablero_juego.iniciar_tablero()
 
     jugador_b = tablero_juego.crear_jugador("B")
-    jugador_n = tablero_juego.crear_jugador("N")
 
-    tablero_juego.iniciar_partida(jugador_b, jugador_n)
+    if opcion == "1":
+        jugador_n = tablero_juego.crear_jugador("N")
+    else:
+        jugador_n = Agente("N")
+   
+    tablero_juego.iniciar_partida(jugador_b, jugador_n)   

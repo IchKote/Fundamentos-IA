@@ -1,0 +1,30 @@
+from math import inf
+from Reglas import Reglas
+
+class Agente:
+    def alfabeta(self, tablero, turnoAgente, alfa, beta):
+        if turnoAgente:
+            mejorPuntaje = -inf
+            for i in range(tablero.dimension):
+                for j in range(tablero.dimension):
+                    if Reglas.jugada_valida(tablero, i, j, "B"):
+                        tablero[i][j] = "B"
+                        puntaje = self.alfabeta(tablero, False, alfa, beta)
+                        tablero[i][j] = "-"
+                        mejorPuntaje = max(mejorPuntaje, puntaje)
+                        alfa = max(alfa, mejorPuntaje)
+                        if alfa >= beta:
+                            break
+        else:
+            mejorPuntaje = inf
+            for i in range(tablero.dimension):
+                for j in range(tablero.dimension):
+                    if Reglas.jugada_valida(tablero, i, j, "N"):
+                        tablero[i][j] = "N"
+                        puntaje = self.alfabeta(tablero, True, alfa, beta)
+                        tablero[i][j] = "-"
+                        mejorPuntaje = min(mejorPuntaje, puntaje)
+                        beta = min(beta, mejorPuntaje)
+                        if alfa >= beta:
+                            break
+        return mejorPuntaje
